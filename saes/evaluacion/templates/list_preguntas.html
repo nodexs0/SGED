@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Preguntas</title>
+</head>
+<body>
+    <h1>Lista de Preguntas</h1>
+    <ul>
+        {% for pregunta in preguntas %}
+            <li>{{ pregunta.texto }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'create_pregunta' %}">Crear Pregunta</a>
+    <a href="{% url 'home' %}">Regresar a inicio</a>
+</body>
+</html>
