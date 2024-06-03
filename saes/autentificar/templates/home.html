@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+    {% if user.is_authenticated %}
+        <h1>Bienvenido {{ user.matricula }}</h1>
+    {% else %}
+        <h1>Bienvenido al sistema</h1>
+        <a href="{% url 'login' %}">Iniciar sesión</a>
+    {% endif %}
+</body>
+</html>

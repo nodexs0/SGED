@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Alumno Home</title>
+</head>
+<body>
+    <h1>Bienvenido Alumno: {{ user.matricula }}</h1>
+    <p>Carrera: {{ user.alumno.carrera }}</p>
+    <a href="{% url 'logout' %}">Cerrar sesión</a>
+</body>
+</html>
