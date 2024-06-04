@@ -1,0 +1,17 @@
+<!-- docente_home.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Docente Home</title>
+</head>
+<body>
+    <h1>Bienvenido Docente: {{ user.matricula }}</h1>
+    <h2>Tus Cursos:</h2>
+    <ul>
+        {% for curso in cursos %}
+            <li>{{ curso.codigo_curso }} - {{ curso.nombre }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'logout' %}">Cerrar sesión</a>
+</body>
+</html>
