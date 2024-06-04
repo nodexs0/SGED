@@ -5,7 +5,7 @@
 </head>
 <body>
     <h1>Bienvenido Docente: {{ user.matricula }}</h1>
-    <p>Especialidad: {{ user.docente.especialidad }}</p>
+    <a href="{% url 'evaluacion_docente' %}">Revisar evaluaciones</a>
     <a href="{% url 'logout' %}">Cerrar sesión</a>
 </body>
 </html>

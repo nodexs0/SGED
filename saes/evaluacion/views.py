@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .forms import PreguntaForm
 from .models import Pregunta
+from administracion.models import Curso, Inscripcion
 
 def is_docente(user):
     return hasattr(user, 'docente')
@@ -26,3 +27,9 @@ def create_pregunta(request):
 def list_preguntas(request):
     preguntas = Pregunta.objects.all()
     return render(request, 'list_preguntas.html', {'preguntas': preguntas})
+
+@login_required
+@user_passes_test(is_docente)
+def evaluacion_docente(request):
+    cursos = Curso.objects.filter(docente=request.user)
+    return render(request, 'evaluacion_docente.html', {'cursos': cursos})
