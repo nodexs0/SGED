@@ -4,6 +4,9 @@ from .forms import PreguntaForm
 from .models import Pregunta
 from administracion.models import Curso, Inscripcion
 
+def is_alumno(user):
+    return hasattr(user, 'alumno')
+
 def is_docente(user):
     return hasattr(user, 'docente')
 
@@ -33,3 +36,15 @@ def list_preguntas(request):
 def evaluacion_docente(request):
     cursos = Curso.objects.filter(docente=request.user)
     return render(request, 'evaluacion_docente.html', {'cursos': cursos})
+
+@login_required
+@user_passes_test(is_alumno)
+def evaluacion_alumno(request):
+    cursos_inscritos = Inscripcion.objects.filter(alumno=request.user.alumno)
+    cursos = []
+
+    for inscripcion in cursos_inscritos:
+        if inscripcion.evaluacion_docente != True:
+            cursos.append(inscripcion.curso)
+
+    return render(request, 'lista_cursos.html', {'cursos': cursos})

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import CursoForm
+from .forms import CursoForm, InscripcionForm
 from .models import Curso, Inscripcion
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -24,3 +24,15 @@ def crear_curso(request):
 def lista_cursos(request):
     cursos = Curso.objects.all()
     return render(request, 'lista_cursos.html', {'cursos': cursos})
+
+
+@login_required
+def inscribir_alumno_curso(request):
+    if request.method == 'POST':
+        form = InscripcionForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_cursos')  # Redirige a la lista de cursos después de la inscripción
+    else:
+        form = InscripcionForm()
+    return render(request, 'inscribir_alumno_curso.html', {'form': form})
