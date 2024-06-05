@@ -9,7 +9,7 @@
     <h1>Lista de Cursos para Evaluar</h1>
     <ul>
         {% for curso in cursos %}
-            <li>{{ curso.codigo_curso }} - {{ curso.nombre }}</li>
+            <li><a href="{% url 'crear_respuesta' codigo_curso=curso.codigo_curso %}">{{ curso.codigo_curso }} - {{ curso.nombre }}</a></li>
         {% endfor %}
     </ul>
 </body>
