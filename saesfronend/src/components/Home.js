@@ -1,17 +1,39 @@
+// src/components/Home.js
 import React, { useContext } from 'react';
-import { AuthContext } from '../AuthContext'; // Asegúrate de importar el contexto de autenticación
+import { AuthContext } from '../AuthContext';
+import { Link } from 'react-router-dom';
+import DocenteHome from './DocenteHome';
+import AlumnoHome from './AlumnoHome';
 
 function Home() {
-    // Acceder al contexto de autenticación
-    const { user } = useContext(AuthContext);
-    console.log('Datos del usuario:', user);
+    const { user, IsDocente, IsAlumno } = useContext(AuthContext);
+
+    if (user) {
+        if (IsDocente()) {
+            return (
+                <div>
+                    <DocenteHome />
+                </div>
+            
+            );
+        } else if (IsAlumno()) {
+            return (
+                <div>
+                    <AlumnoHome />
+                </div>
+            );
+        }
+    }
+
     return (
         <div>
             <h1>Home</h1>
-            <p>Bienvenido a la página de inicio.</p>
-            {user && ( // Verificar si el usuario está autenticado
-                <p>Tu matrícula es: {user.matricula}</p> // Mostrar la matrícula si está autenticado
-            )}
+            {user && <p>Bienvenido, {user.matricula}, {user.tipo}</p>}
+            <nav>
+                <ul>
+                    <li><Link to="/login">Login</Link></li>
+                </ul>
+            </nav>
         </div>
     );
 }

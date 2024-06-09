@@ -1,26 +1,46 @@
-import React, { createContext, useEffect, useState } from 'react';
+// src/AuthContext.js
+import React, { createContext, useState, useEffect } from 'react';
+import axios from 'axios';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  // Obtener el estado de autenticación del sessionStorage o establecerlo en null si no existe
   const [user, setUser] = useState(JSON.parse(sessionStorage.getItem('user')) || null);
 
-  // Función para iniciar sesión
   const login = (userData) => {
     setUser(userData);
-    sessionStorage.setItem('user', JSON.stringify(userData)); // Guardar el usuario en sessionStorage
+    sessionStorage.setItem('user', JSON.stringify(userData));
     console.log('Inicio de sesión exitoso:', userData);
   };
 
-  // Función para cerrar sesión
-  const logout = () => {
-    setUser(null);
-    sessionStorage.removeItem('user'); // Eliminar el usuario del sessionStorage al cerrar sesión
-    console.log('Cierre de sesión exitoso');
+  const handleLogout = async () => {
+    try {
+      await axios.post('http://127.0.0.1:8000/logout/');
+      logout();
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+    }
   };
 
-  // Limpiar el sessionStorage al cargar la aplicación si el usuario ya no está autenticado
+  const logout = () => {
+    if (user) {
+      setUser(null);
+      sessionStorage.removeItem('user');
+      console.log('Sesión cerrada');
+    } else {
+      console.error('No se ha iniciado sesión');
+    }
+    window.location.href = '/';
+  };
+
+  const IsDocente = () => {
+    return user.tipo === 'docente';
+  };
+
+  const IsAlumno = () => {
+    return user.tipo === 'alumno';
+  };
+
   useEffect(() => {
     if (!user) {
       sessionStorage.removeItem('user');
@@ -28,7 +48,7 @@ export const AuthProvider = ({ children }) => {
   }, [user]);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout: handleLogout, IsDocente, IsAlumno }}>
       {children}
     </AuthContext.Provider>
   );

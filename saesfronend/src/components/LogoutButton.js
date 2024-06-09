@@ -1,20 +1,19 @@
-import React, { useContext } from 'react';
-import { AuthContext } from '../AuthContext'; // Importa el contexto de autenticación
+// src/components/LogoutButton.js
+import { useContext, useEffect } from 'react';
+import { AuthContext } from '../AuthContext';
 
-const LogoutButton = () => {
-  // Accede a la función logout del contexto de autenticación
+function LogoutButton() {
   const { logout } = useContext(AuthContext);
 
-  // Maneja la acción de cierre de sesión
-  const handleLogout = () => {
-    logout();
-    // Opcionalmente, redirige al usuario a la página de inicio u otra página después del cierre de sesión
-    window.location.href = '/'; // Redirige a la página de inicio
-  };
+  useEffect(() => {
+    const doLogout = async () => {
+      await logout();
+      window.location.href = '/';
+    };
+    doLogout();
+  }, [ logout ]);
 
-  return (
-    <button onClick={handleLogout}>Logout</button>
-  );
-};
+  return null;
+}
 
 export default LogoutButton;

@@ -9,7 +9,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const { login } = useContext(AuthContext);
+  const { user, login } = useContext(AuthContext);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -19,42 +19,45 @@ const Login = () => {
         matricula: matricula,
         password: password,
       });
-
-      login(response.data); // Asegúrate de que response.data contenga los datos del usuario
-      console.log('Inicio de sesión exitoso:', response.data);
+      login(response.data);
       window.location.href = '/';
     } catch (error) {
       setError('Matrícula o contraseña incorrectas');
     }
   };
 
-  return (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <div>
-          <label>Matrícula</label>
-          <input
-            type="text"
-            value={matricula}
-            onChange={(e) => setMatricula(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Contraseña</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        {error && <div style={{ color: 'red' }}>{error}</div>}
-        <button type="submit">Login</button>
-      </form>
-    </div>
-  );
+  if (user) {
+    window.location.href = '/';
+  } else {
+    return (
+      <div>
+        <h2>Login</h2>
+        <form onSubmit={handleLogin}>
+          <div>
+            <label>Matrícula</label>
+            <input
+              type="text"
+              value={matricula}
+              onChange={(e) => setMatricula(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label>Contraseña</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          {error && <div style={{ color: 'red' }}>{error}</div>}
+          <button type="submit">Login</button>
+        </form>
+      </div>
+    );
+  }
+  return null;
 };
 
 export default Login;

@@ -71,7 +71,7 @@
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth import authenticate, login, logout
 import json
 
 @csrf_exempt
@@ -86,7 +86,7 @@ def login_view(request):
         
         if user is not None:
             # Iniciar sesión si las credenciales son válidas
-            auth_login(request, user)
+            login(request, user)
             # Construir los datos del usuario específicos de la subclase
             if hasattr(user, 'docente'):
                 user_data = {
@@ -109,5 +109,13 @@ def login_view(request):
             return JsonResponse(user_data)  # Devolver los datos del usuario
         else:
             return JsonResponse({'error': 'Matrícula o contraseña incorrectas'}, status=400)
+    else:
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+@csrf_exempt
+def logout_view(request):
+    if request.method == 'POST':
+        logout(request)
+        return JsonResponse({'message': 'Cierre de sesión exitoso'})
     else:
         return JsonResponse({'error': 'Método no permitido'}, status=405)

@@ -1,4 +1,5 @@
-import React from 'react'
+// src/components/DocenteHome.js
+import React from 'react';
 
 const DocenteHome = () => {
   return (
@@ -11,7 +12,7 @@ const DocenteHome = () => {
         <li><a href="#students">Mis Estudiantes</a></li>
       </ul>
     </div>
-  )
+  );
 }
 
 export default DocenteHome;

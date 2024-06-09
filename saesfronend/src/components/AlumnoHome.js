@@ -1,4 +1,5 @@
-import React from 'react'
+// src/components/AlumnoHome.js
+import React from 'react';
 
 const AlumnoHome = () => {
   return (
@@ -11,7 +12,7 @@ const AlumnoHome = () => {
         <li><a href="#grades">Mis Calificaciones</a></li>
       </ul>
     </div>
-  )
+  );
 }
 
 export default AlumnoHome;
