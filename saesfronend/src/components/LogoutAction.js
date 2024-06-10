@@ -1,14 +1,13 @@
-// src/components/LogoutButton.js
+// src/components/LogoutAction.js
 import { useContext, useEffect } from 'react';
 import { AuthContext } from '../AuthContext';
 
-function LogoutButton() {
+function LogoutAction() {
   const { logout } = useContext(AuthContext);
 
   useEffect(() => {
     const doLogout = async () => {
       await logout();
-      window.location.href = '/';
     };
     doLogout();
   }, [ logout ]);
@@ -16,4 +15,4 @@ function LogoutButton() {
   return null;
 }
 
-export default LogoutButton;
+export default LogoutAction;

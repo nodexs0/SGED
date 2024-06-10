@@ -1,9 +1,9 @@
-// src/components/Home.js
 import React, { useContext } from 'react';
 import { AuthContext } from '../AuthContext';
-import { Link } from 'react-router-dom';
 import DocenteHome from './DocenteHome';
 import AlumnoHome from './AlumnoHome';
+import MyNav from './MyNav'; // Importa el componente Nav
+import './MyNav.css';
 
 function Home() {
     const { user, IsDocente, IsAlumno } = useContext(AuthContext);
@@ -12,6 +12,7 @@ function Home() {
         if (IsDocente()) {
             return (
                 <div>
+                    <MyNav />
                     <DocenteHome />
                 </div>
             
@@ -19,6 +20,7 @@ function Home() {
         } else if (IsAlumno()) {
             return (
                 <div>
+                    <MyNav />
                     <AlumnoHome />
                 </div>
             );
@@ -27,13 +29,9 @@ function Home() {
 
     return (
         <div>
+            <MyNav />
             <h1>Home</h1>
             {user && <p>Bienvenido, {user.matricula}, {user.tipo}</p>}
-            <nav>
-                <ul>
-                    <li><Link to="/login">Login</Link></li>
-                </ul>
-            </nav>
         </div>
     );
 }

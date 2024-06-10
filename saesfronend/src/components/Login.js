@@ -3,6 +3,8 @@
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../AuthContext';
+import MyNav from './MyNav'; // Importa el componente Nav
+import './MyNav.css';
 
 const Login = () => {
   const [matricula, setMatricula] = useState('');
@@ -31,6 +33,7 @@ const Login = () => {
   } else {
     return (
       <div>
+        <MyNav />
         <h2>Login</h2>
         <form onSubmit={handleLogin}>
           <div>
