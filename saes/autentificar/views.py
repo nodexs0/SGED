@@ -73,6 +73,8 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
 import json
+from .models import Docente
+from .serializers import DocenteSerializer
 
 @csrf_exempt
 def login_view(request):
@@ -119,3 +121,10 @@ def logout_view(request):
         return JsonResponse({'message': 'Cierre de sesión exitoso'})
     else:
         return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+
+def obtener_docente(request, docente_id):
+    docente = Docente.objects.get(id=docente_id)
+    serializer = DocenteSerializer(docente)
+    return JsonResponse(serializer.data)
+    

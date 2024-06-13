@@ -9,7 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
 class DocenteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Docente
-        fields = '__all__'
+        fields = ['matricula']
 
 class AlumnoSerializer(serializers.ModelSerializer):
     class Meta:

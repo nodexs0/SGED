@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'autentificar',
-    'evaluacion',
+    'evaluaciones',
     'administracion',
     'rest_framework',
     'corsheaders',
@@ -121,7 +121,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-
+LOGOUT_REDIRECT_URL = ''
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 

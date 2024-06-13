@@ -12,7 +12,7 @@
 from django.urls import path, include
 from rest_framework import routers
 from .api import UserViewSet, DocenteViewSet, AlumnoViewSet
-from .views import login_view, logout_view
+from .views import login_view, logout_view, obtener_docente
 
 router = routers.DefaultRouter()
 router.register('user', UserViewSet, 'user')
@@ -22,5 +22,6 @@ router.register('alumno', AlumnoViewSet, 'alumno')
 urlpatterns = [
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
+    path('docente/<int:docente_id>/', obtener_docente, name='obtener_docente'),
     path('api', include(router.urls)),  # Incluir las rutas generadas por el router de DRF
 ]

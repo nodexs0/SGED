@@ -1,4 +1,3 @@
-// src/AuthContext.js
 import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -13,32 +12,26 @@ export const AuthProvider = ({ children }) => {
     console.log('Inicio de sesión exitoso:', userData);
   };
 
-  const handleLogout = async () => {
+  const logout = async () => {
     try {
       await axios.post('http://127.0.0.1:8000/logout/');
-      logout();
-    } catch (error) {
-      console.error('Error al cerrar sesión:', error);
-    }
-  };
-
-  const logout = () => {
-    if (user) {
       setUser(null);
       sessionStorage.removeItem('user');
-      console.log('Sesión cerrada');
-    } else {
-      console.error('No se ha iniciado sesión');
+      console.log('Sesión cerrada exitosamente');
+      window.location.href = '/';
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+      window.location.href = '/';
     }
-    window.location.href = '/';
+    
   };
 
   const IsDocente = () => {
-    return user.tipo === 'docente';
+    return user && user.tipo === 'docente';
   };
 
   const IsAlumno = () => {
-    return user.tipo === 'alumno';
+    return user && user.tipo === 'alumno';
   };
 
   useEffect(() => {
@@ -48,7 +41,7 @@ export const AuthProvider = ({ children }) => {
   }, [user]);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout: handleLogout, IsDocente, IsAlumno }}>
+    <AuthContext.Provider value={{ user, login, logout, IsDocente, IsAlumno }}>
       {children}
     </AuthContext.Provider>
   );

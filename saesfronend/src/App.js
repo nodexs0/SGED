@@ -5,6 +5,8 @@ import { AuthProvider } from './AuthContext';
 import Home from './components/Home';
 import Login from './components/Login';
 import LogoutAction from './components/LogoutAction';
+import Cursos from './components/Cursos';
+import { Evaluacion } from './components/Evaluacion';
 
 function App() {
   return (
@@ -14,6 +16,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/logout" element={<LogoutAction />} />
+          <Route path="/cursos" element={<Cursos />} />
+          <Route path="/evaluaciones" element={<Evaluacion />} />
         </Routes>
       </Router>
     </AuthProvider>
