@@ -16,5 +16,6 @@ from . import views
 urlpatterns = [
     # URLs para obtener los cursos de un alumno o docente
     path('evaluaciones/alumno/<int:alumno_id>/', views.evaluaciones_disponibles, name='evaluaciones_disponibles'),
-    # Otras URLs de tu aplicación
+    path('preguntas/', views.obtener_preguntas, name='obtener_preguntas'),
+    path('responder_preguntas/', views.responder_preguntas, name='create_pregunta'),
 ]

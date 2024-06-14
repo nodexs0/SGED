@@ -14,7 +14,7 @@ class Respuesta(models.Model):
     curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.pregunta}: {self.get_respuesta_display()}"
+        return f"{self.pregunta}: {self.respuesta}"
     
 class Comentario(models.Model):
     comentario = models.TextField()

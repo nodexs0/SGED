@@ -62,11 +62,56 @@
 # views.py
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .models import Evaluacion
-from .serializers import EvaluacionSerializer
+from .models import Evaluacion, Pregunta, Respuesta
+from .serializers import EvaluacionSerializer, PreguntaSerializer
+from administracion.models import Curso
+from autentificar.models import Docente
+from administracion.serializers import CursoSerializer
+import json
 
 @api_view(['GET'])
 def evaluaciones_disponibles(request, alumno_id):
     evaluaciones = Evaluacion.objects.filter(alumno__id=alumno_id, respuestas_completas=False)
-    serializer = EvaluacionSerializer(evaluaciones, many=True)
+
+    datos = []
+    for evaluacion in evaluaciones:
+        curso = Curso.objects.filter(codigo_curso=evaluacion.curso)
+        datos.append({
+            "id" : evaluacion.id,
+            "alumno" : evaluacion.alumno.matricula,
+            "curso" : evaluacion.curso.codigo_curso,
+            "nombre_curso" : curso[0].nombre,
+            "docente" : curso[0].docente.matricula
+        })
+        
+    return Response(datos)
+
+@api_view(['GET'])
+def obtener_preguntas(request):
+    preguntas = Pregunta.objects.all()
+    serializer = PreguntaSerializer(preguntas, many=True)
     return Response(serializer.data)
+
+@api_view(['POST'])
+def responder_preguntas(request):
+    data = json.loads(request.body)
+
+    try:
+        
+        # Iterar sobre las respuestas recibidas y guardarlas en la base de datos
+        for pregunta_id, respuesta_data in data.items():
+            evaluacionid = respuesta_data['evaluacionid']
+            pregunta = Pregunta.objects.get(id=respuesta_data['preguntaid'])
+            curso = Curso.objects.get(codigo_curso=respuesta_data['curso'])
+            respuesta = Respuesta(pregunta=pregunta, respuesta=respuesta_data['respuesta'], curso=curso)
+            respuesta.save()
+
+        # Marcar la evaluación como completada
+        evaluacion = Evaluacion.objects.get(id=evaluacionid)
+        evaluacion.respuestas_completas = True
+        evaluacion.save()
+
+        return Response({"mensaje": "Ok"})
+
+    except Exception as e:
+        return Response({"mensaje": f"Error al procesar las respuestas: {str(e)}"}, status=500)
