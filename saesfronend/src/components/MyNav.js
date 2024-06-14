@@ -21,7 +21,7 @@ const MyNav = () => {
       { label: 'Evaluaciones', href: '/evaluaciones'}
     );
     navItems.push(
-      { label: 'Cursos', href: '/cursos'}
+      { label: 'Comentarios', href: '/comentarios'}
     );
     navItems.push(
       { label: 'Logout', href: '/logout'}

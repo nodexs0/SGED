@@ -2,8 +2,8 @@ import { useContext } from 'react';
 import MyNav from './MyNav';
 import './MyNav.css';
 import { AuthContext } from '../AuthContext';
-import { CursosAlumno } from './CursosAlumno';
-import { CursosDocente } from './CursosDocente';
+import { CursosAlumno } from './ComentariosAlumno';
+import { CursosDocente } from './ComentariosDocente';
 
 function Cursos() {
 

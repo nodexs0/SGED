@@ -63,11 +63,10 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
-from .models import Evaluacion, Pregunta, Respuesta
-from .serializers import EvaluacionSerializer, PreguntaSerializer, RespuestaSerializer
+from .models import Evaluacion, Pregunta, Respuesta, Comentario
+from .serializers import PreguntaSerializer, RespuestaSerializer, ComentarioSerializer
 from administracion.models import Curso
 from autentificar.models import Docente
-from administracion.serializers import CursoSerializer
 import json
 from django.shortcuts import get_object_or_404
 
@@ -137,7 +136,6 @@ def respuestas_curso(request):
         try:
             data = json.loads(request.body)
             curso_codigo = data.get('cursoId')
-            print(curso_codigo)
             # Validar que se envíe el código del curso
             if not curso_codigo:
                 return Response({"error": "Debe proporcionar el código del curso"}, status=status.HTTP_400_BAD_REQUEST)
@@ -148,7 +146,68 @@ def respuestas_curso(request):
             # Filtrar respuestas por el curso encontrado
             respuestas = Respuesta.objects.filter(curso=curso)
             serializer = RespuestaSerializer(respuestas, many=True)
-            print(serializer.data)
+            return Response(serializer.data)
+
+        except json.JSONDecodeError:
+            return Response({"error": "Datos no válidos en el cuerpo de la solicitud"}, status=status.HTTP_400_BAD_REQUEST)
+
+        except Curso.DoesNotExist:
+            return Response({"error": "El curso solicitado no existe"}, status=status.HTTP_404_NOT_FOUND)
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    return Response({"error": "Método no permitido"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+@api_view(['POST'])
+def guardar_comentario(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            curso_codigo = data.get('cursoId')
+            comentario = data.get('comentario')
+            # Validar que se envíe el código del curso
+
+            if not curso_codigo:
+                return Response({"error": "Debe proporcionar el código del curso"}, status=status.HTTP_400_BAD_REQUEST)
+            
+            if not comentario:
+                return Response({"error": "Debe proporcionar un comentario"}, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Obtener el curso desde la base de datos o devolver 404 si no existe
+            curso = get_object_or_404(Curso, codigo_curso=curso_codigo)
+            comentario = Comentario(comentario=comentario, curso=curso)
+            comentario.save()
+            print(comentario)
+            return Response({"mensaje": "Ok"})
+        except json.JSONDecodeError:
+            return Response({"error": "Datos no válidos en el cuerpo de la solicitud"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        except Curso.DoesNotExist:
+            return Response({"error": "El curso solicitado no existe"}, status=status.HTTP_404_NOT_FOUND)
+        
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+    return Response({"error": "Método no permitido"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+@api_view(['POST'])
+def comentarios_curso(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            curso_codigo = data.get('cursoId')
+            # Validar que se envíe el código del curso
+            if not curso_codigo:
+                return Response({"error": "Debe proporcionar el código del curso"}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Obtener el curso desde la base de datos o devolver 404 si no existe
+            curso = get_object_or_404(Curso, codigo_curso=curso_codigo)
+
+            # Filtrar comentarios por el curso encontrado
+            comentarios = Comentario.objects.filter(curso=curso)
+            serializer = ComentarioSerializer(comentarios, many=True)
             return Response(serializer.data)
 
         except json.JSONDecodeError:

@@ -5,10 +5,12 @@ import { AuthProvider } from './AuthContext';
 import Home from './components/Home';
 import Login from './components/Login';
 import LogoutAction from './components/LogoutAction';
-import Cursos from './components/Cursos';
+import Cursos from './components/Comentarios';
 import { Evaluacion } from './components/Evaluacion';
 import { FormPreguntas } from './components/FormPreguntas';
 import { VisualizarRespuestas } from './components/VisualizarRespuestas';
+import { CrearComentario } from './components/CrearComentario';
+import { VisualizarComentario } from './components/VisualizarComentario';
 
 function App() {
   return (
@@ -18,10 +20,12 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/logout" element={<LogoutAction />} />
-          <Route path="/cursos" element={<Cursos />} />
+          <Route path="/comentarios" element={<Cursos />} />
           <Route path="/evaluaciones" element={<Evaluacion />} />
           <Route path="/evaluaciones/:evaluacionId" element={<FormPreguntas />} />
           <Route path="/evaluaciones/docentes/:cursoId" element={<VisualizarRespuestas />} />
+          <Route path='/comentarios/docente/:cursoId' element={<VisualizarComentario />} />
+          <Route path='/comentarios/create/:cursoId' element={<CrearComentario />} />
         </Routes>
       </Router>
     </AuthProvider>

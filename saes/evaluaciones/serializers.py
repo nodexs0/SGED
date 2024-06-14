@@ -1,6 +1,6 @@
 # serializers.py
 from rest_framework import serializers
-from .models import Evaluacion, Pregunta, Respuesta
+from .models import Evaluacion, Pregunta, Respuesta, Comentario
 
 class EvaluacionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -16,3 +16,8 @@ class RespuestaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Respuesta
         fields = ['id', 'pregunta', 'respuesta', 'curso']
+
+class ComentarioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comentario
+        fields = ['id', 'comentario', 'curso']

@@ -19,4 +19,6 @@ urlpatterns = [
     path('preguntas/', views.obtener_preguntas, name='obtener_preguntas'),
     path('responder_preguntas/', views.responder_preguntas, name='create_pregunta'),
     path('respuestas/curso/', views.respuestas_curso, name='respuestas_curso'),
+    path('comentario/create/', views.guardar_comentario, name='create_comentario'),
+    path('comentarios/curso/', views.comentarios_curso, name='comentarios_curso'),
 ]

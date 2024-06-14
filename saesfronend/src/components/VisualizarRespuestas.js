@@ -1,13 +1,12 @@
 import React from 'react'
-import { useEffect, useState, useContext } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { AuthContext } from '../AuthContext'
 import { useParams } from 'react-router-dom';
+import MyNav from './MyNav';
 
 export const VisualizarRespuestas = () => {
 
     const [respuestas, setRespuestas] = useState([])
-    const { user } = useContext(AuthContext)
     const { cursoId } = useParams()
 
     useEffect(() => {
@@ -24,6 +23,7 @@ export const VisualizarRespuestas = () => {
     }, [cursoId])
   return (
     <div>
+      <MyNav />
       <h2>Respuestas</h2>
       <ul>
         {respuestas.map(respuesta => (
