@@ -18,4 +18,5 @@ urlpatterns = [
     path('evaluaciones/alumno/<int:alumno_id>/', views.evaluaciones_disponibles, name='evaluaciones_disponibles'),
     path('preguntas/', views.obtener_preguntas, name='obtener_preguntas'),
     path('responder_preguntas/', views.responder_preguntas, name='create_pregunta'),
+    path('respuestas/curso/', views.respuestas_curso, name='respuestas_curso'),
 ]

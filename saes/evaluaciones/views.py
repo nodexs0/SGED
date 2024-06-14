@@ -62,29 +62,43 @@
 # views.py
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework import status
 from .models import Evaluacion, Pregunta, Respuesta
-from .serializers import EvaluacionSerializer, PreguntaSerializer
+from .serializers import EvaluacionSerializer, PreguntaSerializer, RespuestaSerializer
 from administracion.models import Curso
 from autentificar.models import Docente
 from administracion.serializers import CursoSerializer
 import json
+from django.shortcuts import get_object_or_404
+
 
 @api_view(['GET'])
 def evaluaciones_disponibles(request, alumno_id):
-    evaluaciones = Evaluacion.objects.filter(alumno__id=alumno_id, respuestas_completas=False)
+    try:
+        evaluaciones = Evaluacion.objects.filter(alumno__id=alumno_id, respuestas_completas=False)
+        datos = []
 
-    datos = []
-    for evaluacion in evaluaciones:
-        curso = Curso.objects.filter(codigo_curso=evaluacion.curso)
-        datos.append({
-            "id" : evaluacion.id,
-            "alumno" : evaluacion.alumno.matricula,
-            "curso" : evaluacion.curso.codigo_curso,
-            "nombre_curso" : curso[0].nombre,
-            "docente" : curso[0].docente.matricula
-        })
-        
-    return Response(datos)
+        for evaluacion in evaluaciones:
+            curso = Curso.objects.get(codigo_curso=evaluacion.curso)
+            datos.append({
+                "id": evaluacion.id,
+                "alumno": evaluacion.alumno.matricula,
+                "curso": curso.codigo_curso,
+                "nombre_curso": curso.nombre,
+                "docente": curso.docente.matricula
+            })
+
+        return Response(datos)
+
+    except Evaluacion.DoesNotExist:
+        return Response({"error": "No se encontraron evaluaciones disponibles para este alumno"}, status=status.HTTP_404_NOT_FOUND)
+
+    except Curso.DoesNotExist:
+        return Response({"error": "No se encontró información del curso asociado a la evaluación"}, status=status.HTTP_404_NOT_FOUND)
+
+    except Exception as e:
+        return Response({"error": f"Error al obtener evaluaciones disponibles: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 @api_view(['GET'])
 def obtener_preguntas(request):
@@ -115,3 +129,35 @@ def responder_preguntas(request):
 
     except Exception as e:
         return Response({"mensaje": f"Error al procesar las respuestas: {str(e)}"}, status=500)
+
+
+@api_view(['POST'])
+def respuestas_curso(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            curso_codigo = data.get('cursoId')
+            print(curso_codigo)
+            # Validar que se envíe el código del curso
+            if not curso_codigo:
+                return Response({"error": "Debe proporcionar el código del curso"}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Obtener el curso desde la base de datos o devolver 404 si no existe
+            curso = get_object_or_404(Curso, codigo_curso=curso_codigo)
+
+            # Filtrar respuestas por el curso encontrado
+            respuestas = Respuesta.objects.filter(curso=curso)
+            serializer = RespuestaSerializer(respuestas, many=True)
+            print(serializer.data)
+            return Response(serializer.data)
+
+        except json.JSONDecodeError:
+            return Response({"error": "Datos no válidos en el cuerpo de la solicitud"}, status=status.HTTP_400_BAD_REQUEST)
+
+        except Curso.DoesNotExist:
+            return Response({"error": "El curso solicitado no existe"}, status=status.HTTP_404_NOT_FOUND)
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    return Response({"error": "Método no permitido"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)

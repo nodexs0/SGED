@@ -1,61 +1,81 @@
-# from django.shortcuts import render, redirect
-# from .forms import CursoForm, InscripcionForm
-# from .models import Curso, Inscripcion
-# from django.shortcuts import render, redirect
-# from django.contrib.auth.decorators import login_required, user_passes_test
-
-# def is_admin(user):
-#     return user.is_superuser
-
-# @login_required
-# @user_passes_test(is_admin)
-# def crear_curso(request):
-#     if request.method == 'POST':
-#         form = CursoForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('lista_cursos')  # Redirecciona a la vista de lista de cursos
-#     else:
-#         form = CursoForm()
-#     return render(request, 'crear_curso.html', {'form': form})
-
-# @login_required
-# @user_passes_test(is_admin)
-# def lista_cursos(request):
-#     cursos = Curso.objects.all()
-#     return render(request, 'lista_cursos.html', {'cursos': cursos})
-
-
-# @login_required
-# def inscribir_alumno_curso(request):
-#     if request.method == 'POST':
-#         form = InscripcionForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('lista_cursos')  # Redirige a la lista de cursos después de la inscripción
-#     else:
-#         form = InscripcionForm()
-#     return render(request, 'inscribir_alumno_curso.html', {'form': form})
-
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework import status
 from .models import Curso
 from .serializers import CursoSerializer, InscripcionSerializer
+from django.shortcuts import get_object_or_404
 
-@api_view(['GET'])
-def cursos_alumno(request, alumno_id):
-    cursos = Curso.objects.filter(inscripcion__alumno__id=alumno_id)
-    serializer = CursoSerializer(cursos, many=True)
-    return Response(serializer.data)
+@api_view(['POST'])
+def cursos_alumno(request):
+    # Verificar si 'userId' está presente y es un entero en el cuerpo de la solicitud
+    if 'userId' not in request.data:
+        return Response({'error': 'Se requiere el campo "userId" en el cuerpo de la solicitud'}, status=400)
 
-@api_view(['GET'])
-def cursos_docente(request, docente_id):
-    cursos = Curso.objects.filter(docente__id=docente_id)
-    serializer = CursoSerializer(cursos, many=True)
-    return Response(serializer.data)
+    # Obtener el userId del cuerpo de la solicitud
+    alumno_id = request.data.get('userId')
+    if not isinstance(alumno_id, int):
+        return Response({'error': 'El campo "userId" debe ser un entero válido'}, status=400)
 
-@api_view(['GET'])
-def obtenercurso(request, codigo_curso):  # Ajusta la firma de la función
-    curso = Curso.objects.get(codigo_curso=codigo_curso)  # Utiliza el parámetro correcto
-    serializer = CursoSerializer(curso)
-    return Response(serializer.data)
+    try:
+        # Filtrar cursos asociados al alumno
+        cursos = Curso.objects.filter(inscripcion__alumno__id=alumno_id)
+
+        # Verificar si hay cursos encontrados
+        if not cursos.exists():
+            return Response({'error': f'No se encontraron cursos para el alumno con ID {alumno_id}'}, status=404)
+
+        # Serializar los cursos encontrados
+        serializer = CursoSerializer(cursos, many=True)
+        return Response(serializer.data)
+    
+    except ValueError:
+        return Response({'error': 'Valor inválido para "userId"'}, status=400)
+    
+    except Curso.DoesNotExist:
+        return Response({'error': f'No se encontraron cursos para el alumno con ID {alumno_id}'}, status=404)
+    
+    except Exception as e:
+        return Response({'error': 'Error interno del servidor'}, status=500)
+
+
+@api_view(['POST'])
+def cursos_docente(request):
+    try:
+        # Obtener el docente_id del cuerpo de la solicitud JSON
+        docente_id = request.data.get('docente_id')
+        
+        # Validar que docente_id sea un entero válido
+        if not isinstance(docente_id, int):
+            return Response({'error': 'El campo "docente_id" debe ser un entero válido'}, status=400)
+        
+        # Filtrar cursos asociados al docente
+        cursos = Curso.objects.filter(docente__id=docente_id)
+
+        # Verificar si hay cursos encontrados
+        if not cursos.exists():
+            return Response({'error': f'No se encontraron cursos para el docente con ID {docente_id}'}, status=404)
+
+        # Serializar los cursos encontrados
+        serializer = CursoSerializer(cursos, many=True)
+        return Response(serializer.data)
+
+    except ValueError:
+        return Response({'error': 'Valor inválido para "docente_id"'}, status=400)
+
+    except Curso.DoesNotExist:
+        return Response({'error': f'No se encontraron cursos para el docente con ID {docente_id}'}, status=404)
+
+    except Exception as e:
+        return Response({'error': 'Error interno del servidor'}, status=500)
+
+@api_view(['POST'])
+def obtenercurso(request):
+    try:
+        codigo_curso = request.data.get('codigo_curso')
+        curso = Curso.objects.get(codigo_curso=codigo_curso)
+        serializer = CursoSerializer(curso)
+        return Response(serializer.data)
+    except Curso.DoesNotExist:
+        return Response({"error": "El curso solicitado no existe"}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)

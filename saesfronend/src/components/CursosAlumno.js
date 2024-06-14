@@ -4,13 +4,12 @@ import { AuthContext } from '../AuthContext';
 
 export const CursosAlumno = () => {
   const [cursos, setCursos] = useState([]);
-
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchCursos = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/cursos/alumno/${user.id}/`);
+        const response = await axios.post('http://localhost:8000/cursos/alumno/', { userId: user.id });
         setCursos(response.data);
       } catch (error) {
         console.error('Error al obtener los cursos del alumno:', error);

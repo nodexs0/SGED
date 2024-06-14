@@ -8,6 +8,7 @@ import LogoutAction from './components/LogoutAction';
 import Cursos from './components/Cursos';
 import { Evaluacion } from './components/Evaluacion';
 import { FormPreguntas } from './components/FormPreguntas';
+import { VisualizarRespuestas } from './components/VisualizarRespuestas';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/cursos" element={<Cursos />} />
           <Route path="/evaluaciones" element={<Evaluacion />} />
           <Route path="/evaluaciones/:evaluacionId" element={<FormPreguntas />} />
+          <Route path="/evaluaciones/docentes/:cursoId" element={<VisualizarRespuestas />} />
         </Routes>
       </Router>
     </AuthProvider>

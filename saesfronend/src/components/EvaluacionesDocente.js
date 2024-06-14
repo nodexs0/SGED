@@ -1,11 +1,16 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React from 'react'
+import { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../AuthContext';
 
-export const CursosDocente = () => {
+
+export const EvaluacionesDocente = () => {
+
     const [cursos, setCursos] = useState([]);
     const { user } = useContext(AuthContext);
-
+    const navigate = useNavigate();
+    
     useEffect(() => {
         const fetchCursos = async () => {
             try {
@@ -19,14 +24,24 @@ export const CursosDocente = () => {
         fetchCursos();
     }, [user.id]);
 
+    const handleButtonClick = (cursoId) => {
+        navigate(`/evaluaciones/docentes/${cursoId}`);
+    };
+
     return (
         <div>
-            <h2>Tus cursos</h2>
+            <h2>Tus Evaluaciones</h2>
             <ul>
                 {cursos.map(curso => (
-                    <li key={curso.codigo_curso}>{curso.codigo_curso} - {curso.nombre}</li>
+                    <div>
+                        <li key={curso.codigo_curso}>
+                            <button onClick={() => handleButtonClick(curso.codigo_curso)}> 
+                                {curso.codigo_curso} - {curso.nombre}
+                            </button>
+                        </li>
+                    </div>
                 ))}
             </ul>
         </div>
     );
-};
+}

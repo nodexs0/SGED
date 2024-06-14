@@ -3,6 +3,7 @@ import MyNav from './MyNav';
 import './MyNav.css';
 import { AuthContext } from '../AuthContext';
 import EvaluacionesAlumno from './EvaluacionesAlumno';
+import { EvaluacionesDocente } from './EvaluacionesDocente';
 
 export const Evaluacion = () => {
     const { user } = useContext(AuthContext);
@@ -11,7 +12,7 @@ export const Evaluacion = () => {
         return (
         <div>
             <MyNav />
-            <h2>Esta es la vista de la evaluación para docentes</h2>
+            <EvaluacionesDocente />
         </div>
         );
     } else if (user.tipo === 'alumno') {
