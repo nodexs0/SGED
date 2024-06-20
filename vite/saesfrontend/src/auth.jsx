@@ -26,6 +26,7 @@ export function useAuth() {
             const user = response.data;
             localStorage.setItem('user', JSON.stringify(user));
             setUser(user);
+            window.location.reload();
             navigate('/');
         } catch (error) {
             console.error('Error al iniciar sesión:', error.message);
@@ -37,6 +38,7 @@ export function useAuth() {
             await axios.post('http://127.0.0.1:8000/logout/');
             localStorage.removeItem('user');
             setUser(null);
+            window.location.reload();
             navigate('/');
         } catch (error) {
             console.error('Error al cerrar sesión:', error);

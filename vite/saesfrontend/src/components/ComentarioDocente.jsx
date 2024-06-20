@@ -2,7 +2,15 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth';
-
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+  } from '@/components/ui/table';
+  
 const ComentarioDocente = () => {
 
     const [cursos, setCursos] = useState([]);
@@ -28,14 +36,38 @@ const ComentarioDocente = () => {
 
     return (
         <div>
-            <h2>Tus cursos</h2>
-            <ul>
-                {cursos.map(curso => (
-                    <li key={curso.codigo_curso}>
-                        <button onClick={() => handleButtonClick(curso.codigo_curso)}>{curso.codigo_curso} - {curso.nombre}</button>
-                    </li>
-                ))}
-            </ul>
+            <h2>Tus curso</h2>
+            <Table>
+                <TableHeader>
+                <TableRow>
+                    <TableHead>Curso</TableHead>
+                    <TableHead>Nombre del Curso</TableHead>
+                    <TableHead>Acción</TableHead>
+                </TableRow>
+                </TableHeader>
+                <TableBody>
+                {cursos && cursos.length > 0 ? (
+                    cursos.map((curso) => (
+                    <TableRow key={curso.codigo_curso}>
+                        <TableCell>{curso.codigo_curso}</TableCell>
+                        <TableCell>{curso.nombre}</TableCell>
+                        <TableCell>
+                        <button
+                            className="btn"
+                            onClick={() => handleButtonClick(curso.codigo_curso)}
+                        >
+                            Revisar comentarios
+                        </button>
+                        </TableCell>
+                    </TableRow>
+                    ))
+                ) : (
+                    <TableRow>
+                    <TableCell colSpan="4">No hay evaluaciones disponibles</TableCell>
+                    </TableRow>
+                )}
+                </TableBody>
+            </Table>
         </div>
     );
 }
