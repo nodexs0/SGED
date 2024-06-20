@@ -1,4 +1,3 @@
-// auth.js
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -30,6 +29,7 @@ export function useAuth() {
             navigate('/');
         } catch (error) {
             console.error('Error al iniciar sesión:', error.message);
+            throw new Error(error.response?.data?.message || 'Error al iniciar sesión');
         }
     };
 

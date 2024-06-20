@@ -11,11 +11,17 @@ const SheetLogin = () => {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(''); // Estado para manejar el error
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    await login(username, password);
-    navigate('/');
+    setError(''); // Limpiar el error antes de intentar iniciar sesión
+    try {
+      await login(username, password);
+      navigate('/');
+    } catch (error) {
+      setError(error.message); // Actualizar el estado de error
+    }
   };
 
   useEffect(() => {
@@ -33,6 +39,7 @@ const SheetLogin = () => {
             Introduce tus credenciales a continuación para iniciar sesión.
           </SheetDescription>
         </SheetHeader>
+        {error && <div style={{ color: 'rgb(117, 40, 68)', fontWeight: 'bold' }}>{error}</div>} {/* Mostrar mensaje de error */}
         <form onSubmit={handleLogin}>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
