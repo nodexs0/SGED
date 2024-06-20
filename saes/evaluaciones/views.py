@@ -107,27 +107,34 @@ def obtener_preguntas(request):
 
 @api_view(['POST'])
 def responder_preguntas(request):
-    data = json.loads(request.body)
-
     try:
+        data = json.loads(request.body)
+        print(data)
+        
+        evaluacionid = None
         
         # Iterar sobre las respuestas recibidas y guardarlas en la base de datos
-        for pregunta_id, respuesta_data in data.items():
-            evaluacionid = respuesta_data['evaluacionid']
+        for respuesta_data in data:
             pregunta = Pregunta.objects.get(id=respuesta_data['preguntaid'])
             curso = Curso.objects.get(codigo_curso=respuesta_data['curso'])
             respuesta = Respuesta(pregunta=pregunta, respuesta=respuesta_data['respuesta'], curso=curso)
+            print(respuesta)
             respuesta.save()
 
-        # Marcar la evaluación como completada
-        evaluacion = Evaluacion.objects.get(id=evaluacionid)
-        evaluacion.respuestas_completas = True
-        evaluacion.save()
+            if not evaluacionid:
+                evaluacionid = respuesta_data['evaluacionid']
+        
+        if evaluacionid:
+            # Marcar la evaluación como completada
+            evaluacion = Evaluacion.objects.get(id=evaluacionid)
+            evaluacion.respuestas_completas = True
+            evaluacion.save()
 
         return Response({"mensaje": "Ok"})
 
     except Exception as e:
         return Response({"mensaje": f"Error al procesar las respuestas: {str(e)}"}, status=500)
+
 
 
 @api_view(['POST'])

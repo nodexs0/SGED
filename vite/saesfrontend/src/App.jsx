@@ -11,6 +11,7 @@ import VisualizarRespuestas from './components/VisualizarRespuestas';
 import Comentario from './components/Comentario';
 import CrearComentario from './components/CrearComentario';
 import VisualizarComentarios from './components/VisualizarComentarios';
+import VisualizarPreguntas from './components/VisualizarPreguntas';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/comentario" element={<Comentario />} />
         <Route path='/comentarios/create/:cursoId' element={<CrearComentario />} />
         <Route path='/comentarios/docente/:cursoId' element={<VisualizarComentarios />} />
+        <Route path='/preguntas' element={<VisualizarPreguntas />} />
       </Routes>
     </Router>
   );
