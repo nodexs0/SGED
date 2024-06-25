@@ -4,6 +4,7 @@ import { Label } from '@/components/ui/label';
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth';
+import Home from './Home';
 
 const SheetLogin = () => {
   const navigate = useNavigate();
@@ -31,7 +32,9 @@ const SheetLogin = () => {
   }, [user, navigate]);
 
   return (
-    <Sheet open={true}>
+    <div>
+      <Home />
+      <Sheet open={true}>
       <SheetContent>
         <SheetHeader>
           <SheetTitle>Inicio de Sesión</SheetTitle>
@@ -39,7 +42,7 @@ const SheetLogin = () => {
             Introduce tus credenciales a continuación para iniciar sesión.
           </SheetDescription>
         </SheetHeader>
-        {error && <div style={{ color: 'rgb(117, 40, 68)', fontWeight: 'bold' }}>{error}</div>} {/* Mostrar mensaje de error */}
+        {error && <div style={{ color: 'rgb(117, 40, 68)', fontWeight: 'bold' }}>{error}</div>}
         <form onSubmit={handleLogin}>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
@@ -74,6 +77,7 @@ const SheetLogin = () => {
         </form>
       </SheetContent>
     </Sheet>
+    </div>
   );
 };
 
