@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/navigation-menu';
 import { useAuth } from '../auth';
 
+import ipn from '../assets/ipn.png';
 const NavigationMenuDemo = () => {
   const { user, IsAlumno, IsDocente } = useAuth();
   const [components, setComponents] = useState([]);
@@ -49,7 +50,7 @@ const NavigationMenuDemo = () => {
     <NavigationMenu>
       <NavigationMenuList className="flex justify-between items-center">
       <div className="flex items-center">
-          <img src="ipn.png" alt="Logo" className="h-10 ml-4" />
+          <img src={ipn} alt="Logo" className="h-10 ml-4" />
         </div>
         <div className="flex">
           <NavigationMenuItem>
